@@ -14,7 +14,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuth();
-  const nav = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,24 +24,46 @@ export default function Login() {
     try {
       if (isLogin) {
         console.log("Attempting login with:", form);
-        const res = await apiLogin(form);
+
+        const res = await apiLogin({ 
+          username: form.username, 
+          password: form.password 
+        });
+
         console.log("Login response:", res);
+
+        if (!res.token) throw new Error("No token received");
+
         login(res.token, res.role, res.branch, res.username);
-        nav("/");
+        navigate("/");
       } else {
         if (form.password !== form.confirmPassword) {
           setError("Passwords do not match");
+          setLoading(false);
           return;
         }
+
         console.log("Attempting registration with:", form);
-        const res = await apiRegister(form);
+
+        const res = await apiRegister({
+          username: form.username,
+          password: form.password,
+          branch: form.branch,
+        });
+
         console.log("Registration response:", res);
+
+        if (!res.token) throw new Error("No token received");
+
         login(res.token, res.role, res.branch, res.username);
-        nav("/");
+        navigate("/");
       }
     } catch (e) {
       console.error("Auth error:", e);
-      setError(e.response?.data?.message || (isLogin ? "Login failed" : "Registration failed"));
+      setError(
+        e.response?.data?.message || 
+        (isLogin ? "Login failed" : "Registration failed")
+      );
     } finally {
       setLoading(false);
     }
@@ -64,8 +86,7 @@ export default function Login() {
           <p className="text-gray-600">
             {isLogin 
               ? 'Sign in to manage your ice cream business' 
-              : 'Create your account to get started'
-            }
+              : 'Create your account to get started'}
           </p>
         </div>
 
@@ -76,6 +97,7 @@ export default function Login() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Username */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Username
@@ -90,6 +112,7 @@ export default function Login() {
             />
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Password
@@ -105,8 +128,10 @@ export default function Login() {
             />
           </div>
 
+          {/* Extra fields for Register */}
           {!isLogin && (
             <>
+              {/* Confirm Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Confirm Password
@@ -121,6 +146,7 @@ export default function Login() {
                 />
               </div>
 
+              {/* Branch Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Branch Name
@@ -137,6 +163,7 @@ export default function Login() {
             </>
           )}
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
@@ -153,6 +180,7 @@ export default function Login() {
           </button>
         </form>
 
+        {/* Toggle form */}
         <div className="mt-6 text-center">
           <button
             onClick={() => {
@@ -164,8 +192,7 @@ export default function Login() {
           >
             {isLogin 
               ? "Don't have an account? Sign up" 
-              : "Already have an account? Sign in"
-            }
+              : "Already have an account? Sign in"}
           </button>
         </div>
 
