@@ -1,0 +1,1 @@
+const mongoose = require('mongoose'); const schema = new mongoose.Schema({branch:String,city:String,flavor:String,units:{type:Number,default:0},amount:{type:Number,default:0},date:{type:Date,default:Date.now}}); module.exports = mongoose.model('Sale', schema);

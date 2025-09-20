@@ -1,0 +1,1 @@
+import React from 'react'; import { Link } from 'react-router-dom'; export default function Sidebar(){ return (<div style={{width:220,background:'#f1f5f9',padding:16}}><nav style={{display:'flex',flexDirection:'column',gap:8}}><Link to='/'>Dashboard</Link><Link to='/branches'>Branches</Link><Link to='/sales'>Sales</Link><Link to='/ingredients'>Ingredients</Link></nav></div>); }

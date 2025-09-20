@@ -1,0 +1,1 @@
+const mongoose = require('mongoose'); const schema = new mongoose.Schema({name:String,city:String,area:String,address:String}); module.exports = mongoose.model('Branch', schema);

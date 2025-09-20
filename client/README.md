@@ -1,0 +1,1 @@
+Client run: cd client && npm install && npm run dev
