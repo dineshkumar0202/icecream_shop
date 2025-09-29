@@ -1,15 +1,21 @@
+// api.js
 import axios from "axios";
 
-const API = axios.create({
-  baseURL: "http://localhost:5000/api",
-  headers: { "Content-Type": "application/json" },
+const api = axios.create({
+  baseURL: "http://localhost:3000/api",
 });
 
-API.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    console.log("🔑 Attaching token:", token);
+    // Send in both formats to be safe
+    config.headers.Authorization = `Bearer ${token}`;
+    config.headers["x-auth-token"] = token;
+  }
   return config;
 });
+
 
 export const getBranches = () => API.get("/branches");
 export const getSales = (branchId) => API.get("/sales", { params: branchId ? { branch: branchId } : {} });
@@ -18,4 +24,5 @@ export const deleteSale = (id) => API.delete(`/sales/${id}`);
 export const updateBranch = (id, payload) => API.put(`/branches/${id}`, payload);
 export const deleteBranch = (id) => API.delete(`/branches/${id}`);
 
-export default API;
+
+export default api;
