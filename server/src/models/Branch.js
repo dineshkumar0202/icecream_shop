@@ -1,1 +1,10 @@
-const mongoose = require('mongoose'); const schema = new mongoose.Schema({name:String,city:String,area:String,address:String}); module.exports = mongoose.model('Branch', schema);
+const mongoose = require('mongoose');
+
+const BranchSchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true },
+  city: { type: String, required: true },
+  area: { type: String, required: true },
+  address: { type: String },
+});
+
+module.exports = mongoose.model('Branch', BranchSchema);
